@@ -126,7 +126,7 @@ public class ChessMatch {
                 return (ChessPiece)p;
             }
         }
-        throw new IllegalStateException("  Não existe um rei " + color + " no tabuleiro");
+        throw new IllegalStateException("  Nao existe um rei " + color + " no tabuleiro");
     }
 
     private boolean testCheck(Color color) {

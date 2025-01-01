@@ -4,13 +4,15 @@ import boardgame.Position;
 import chess.exception.ChessException;
 
 public class ChessPosition {
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_RESET = "\u001B[0m";
 
     private char column;
     private int row;
 
     public ChessPosition(char column, int row) {
         if (column < 'a' || column > 'h' || row < 1 || row > 8) {
-            throw new ChessException("  Erro ao instanciar ChessPosition: valores válidos são de a1 a h8.");
+            throw new ChessException(ANSI_RED + "  Erro ao instanciar ChessPosition: valores válidos são de a1 a h8." + ANSI_RESET);
         }
         this.column = column;
         this.row = row;
