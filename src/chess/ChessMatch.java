@@ -6,10 +6,14 @@ import boardgame.Position;
 import chess.exception.ChessException;
 import chess.pieces.*;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChessMatch {
+
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
 
     private int turn;
     private Color currentPlayer;
@@ -17,6 +21,7 @@ public class ChessMatch {
     private boolean check;
     private boolean checkMate;
     private ChessPiece enPassant;
+    private ChessPiece promoted;
 
     private List<Piece> piecesOnTheBoard = new ArrayList<>();
     private List<Piece> capturedPieces = new ArrayList<>();
@@ -58,6 +63,10 @@ public class ChessMatch {
         return mat;
     }
 
+    public ChessPiece getPromoted() {
+        return promoted;
+    }
+
     public boolean[][] possibleMoves(ChessPosition sourcePosition) {
         Position position = sourcePosition.toPosition();
         validateSourcePosition(position);
@@ -77,6 +86,13 @@ public class ChessMatch {
         }
 
         ChessPiece movedPiece = (ChessPiece) board.piece(target);
+
+        // Promotion
+        promoted = null;
+        if (movedPiece instanceof Pawn && (movedPiece.getColor() == Color.WHITE && target.getRow() == 0) || (movedPiece.getColor() == Color.BLACK && target.getRow() == 7)) {
+            promoted = (ChessPiece) board.piece(target);
+            promoted = replacePromotedPiece("Q");
+        }
 
         check = (testCheck(opponent(currentPlayer))) ? true : false;
 
@@ -114,6 +130,34 @@ public class ChessMatch {
         if (!board.piece(source).possibleMove(target)) {
             throw new ChessException("  A peca escolhida nao pode se mover para a posicao de destino.");
         }
+    }
+
+    public ChessPiece replacePromotedPiece(String type) {
+        if (promoted == null) {
+            throw new IllegalStateException(ANSI_RED + "  Nao ha peca para ser promovida!" + ANSI_RESET);
+        }
+        if (!type.equalsIgnoreCase("B") && !type.equalsIgnoreCase("H") && !type.equalsIgnoreCase("R") && !type.equalsIgnoreCase("Q")) {
+            throw new InvalidParameterException(ANSI_RED + "  Peca invalida para promocao!" + ANSI_RESET);
+        }
+
+        Position pos = promoted.getChessPosition().toPosition();
+        Piece p = board.removePiece(pos);
+        piecesOnTheBoard.remove(p);
+
+        ChessPiece newPiece = newPiece(type, promoted.getColor());
+        board.placePiece(newPiece, pos);
+        piecesOnTheBoard.add(newPiece);
+
+        return newPiece;
+    }
+
+    private ChessPiece newPiece(String type, Color color) {
+        return switch (type.toUpperCase()) {
+            case "B" -> new Bishop(board, color);
+            case "H" -> new Knight(board, color);
+            case "Q" -> new Queen(board, color);
+            default -> new Rook(board, color);
+        };
     }
 
     private Piece makeMove(Position source, Position target) {
