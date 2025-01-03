@@ -14,6 +14,8 @@ public class Program {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        final String ANSI_RESET = "\u001B[0m";
+        final String ANSI_RED = "\u001B[31m";
 
         ChessMatch chessMatch = new ChessMatch();
         List<ChessPiece> captured = new ArrayList<>();
@@ -40,7 +42,11 @@ public class Program {
                 }
                 if (chessMatch.getPromoted() != null) {
                     System.out.print("  Entre com a peca para ser promovida (R/H/B/Q): ");
-                    String type = sc.nextLine();
+                    String type = sc.nextLine().toUpperCase();
+                    while (!type.equals("B") && !type.equals("H") && !type.equals("R") && !type.equals("Q")) {
+                        System.out.print(ANSI_RED + "  Valor invalido!" + ANSI_RESET + " Entre com a peca para ser promovida (R/H/B/Q): ");
+                        type = sc.nextLine().toUpperCase();
+                    }
                     chessMatch.replacePromotedPiece(type);
                 }
             }

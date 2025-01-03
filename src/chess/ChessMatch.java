@@ -136,8 +136,8 @@ public class ChessMatch {
         if (promoted == null) {
             throw new IllegalStateException(ANSI_RED + "  Nao ha peca para ser promovida!" + ANSI_RESET);
         }
-        if (!type.equalsIgnoreCase("B") && !type.equalsIgnoreCase("H") && !type.equalsIgnoreCase("R") && !type.equalsIgnoreCase("Q")) {
-            throw new InvalidParameterException(ANSI_RED + "  Peca invalida para promocao!" + ANSI_RESET);
+        if (!type.equals("B") && !type.equals("H") && !type.equals("R") && !type.equals("Q")) {
+            return promoted;
         }
 
         Position pos = promoted.getChessPosition().toPosition();
@@ -152,7 +152,7 @@ public class ChessMatch {
     }
 
     private ChessPiece newPiece(String type, Color color) {
-        return switch (type.toUpperCase()) {
+        return switch (type) {
             case "B" -> new Bishop(board, color);
             case "H" -> new Knight(board, color);
             case "Q" -> new Queen(board, color);
