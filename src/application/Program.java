@@ -41,10 +41,12 @@ public class Program {
                     captured.add(capturedPiece);
                 }
                 if (chessMatch.getPromoted() != null) {
-                    System.out.print("  Entre com a peca para ser promovida (R/H/B/Q): ");
+                    System.out.print("\n  Entre com a peca para ser promovida (R/H/B/Q): ");
                     String type = sc.nextLine().toUpperCase();
                     while (!type.equals("B") && !type.equals("H") && !type.equals("R") && !type.equals("Q")) {
-                        System.out.print(ANSI_RED + "  Valor invalido!" + ANSI_RESET + " Entre com a peca para ser promovida (R/H/B/Q): ");
+                        UI.clearScreen();
+                        UI.printMatch(chessMatch, captured);
+                        System.out.print(ANSI_RED + "\n  Valor invalido!" + ANSI_RESET + " Entre corretamente com a peca para ser promovida (R/H/B/Q): ");
                         type = sc.nextLine().toUpperCase();
                     }
                     chessMatch.replacePromotedPiece(type);

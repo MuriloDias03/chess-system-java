@@ -91,7 +91,7 @@ public class ChessMatch {
         promoted = null;
         if (movedPiece instanceof Pawn && (movedPiece.getColor() == Color.WHITE && target.getRow() == 0) || (movedPiece.getColor() == Color.BLACK && target.getRow() == 7)) {
             promoted = (ChessPiece) board.piece(target);
-            promoted = replacePromotedPiece("Q");
+            promoted = replacePromotedPiece("P");
         }
 
         check = (testCheck(opponent(currentPlayer))) ? true : false;
